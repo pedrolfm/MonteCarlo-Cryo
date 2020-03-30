@@ -13,13 +13,13 @@ from SlicerDevelopmentToolboxUtils.mixins import ModuleWidgetMixin, ModuleLogicM
 # CryoMC
 #
 
-#SizeX = 6.0
-#SizeY = 6.0
-#SizeZ = 12.0
+SizeX = 6.0
+SizeY = 6.0
+SizeZ = 12.0
 
-SizeX = 10.5
-SizeY = 10.5
-SizeZ = 14.0
+#SizeX = 10.5
+#SizeY = 10.5
+#SizeZ = 14.0
 
 class CryoMC(ScriptedLoadableModule):
   """Uses ScriptedLoadableModule base class, available at:
@@ -790,11 +790,11 @@ class Cryo2Probes(ScriptedLoadableModuleLogic):
     self.sdterr = StdevError
     self.DiceGain = 5.0
 
-    cases = ["020","029", "059", "032", "035"]
+    cases = ["028","029", "059", "032", "035"]
 
-    for i in range(0, 2):
-      #path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/ralp-%s' % (cases[i])
-      path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/Clinical%s' % (cases[i])
+    for i in range(0, 1):
+      path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/ralp-%s' % (cases[i])
+      #path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/Clinical%s' % (cases[i])
       imageName = 'TumorRed'
       labelName = 'TumorRed-label'
       modelImageFileName = '%s/%s.nrrd' % (path, imageName)
@@ -809,7 +809,7 @@ class Cryo2Probes(ScriptedLoadableModuleLogic):
 
 
 
-      resultFileName = "Results-2Probes-100-Case0%s" % (cases[i])
+      resultFileName = "Results-2Probes-2020a-Case0%s" % (cases[i])
       resultFilePath = '/Users/pedro/Projects/MonteCarlo' + '/' + resultFileName
       resultFile = open(resultFilePath, 'a')
 
@@ -822,7 +822,7 @@ class Cryo2Probes(ScriptedLoadableModuleLogic):
       self.sdterr = 0
       X = self.optimizationCryo(N, Kd)
 
-      for i in range(0, 16):
+      for i in range(0, 1):
         self.sdterr = i
         self.output = outputLabel
         result = self.Probability(X, 10000)
@@ -1220,40 +1220,16 @@ class Cryo3Probes(ScriptedLoadableModuleLogic):
                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     saveMass = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    self.sdterr = 0.5
-
-    print("==========")
-    print(inputVolume2)
-    print("==========")
 
     self.DiceGain = Kd
 
 
-    self.sdterr = 4.0
-
-    start_time = time.time()
-    self.InitDataForPlanning(inputVolume2)
-    self.GetCenterTumor(inputVolume2)
-
-    self.output = outputLabel
-
-    RasToIjkMatrix = vtk.vtkMatrix4x4()
-    inputVolume2.GetRASToIJKMatrix(RasToIjkMatrix)
-
-
-    X = self.optimizationCryo(N,Kd)
-    elapsed_time = time.time() - start_time
-    print(elapsed_time)
-
-    savetime[0] = elapsed_time
-    saveMetric[0] = self.Metric[0]
-
     cases = ["020", "029", "028", "032", "035", "036", "038", "042"]
 
-    for i in range(0, 2):
+    for i in range(0, 1):
       slicer.mrmlScene.Clear(0)
-      path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/Clinical%s' % (cases[i])
-      #path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/ralp-%s' % (cases[i])
+      #path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/Clinical%s' % (cases[i])
+      path = '/Users/pedro/Dropbox (Partners HealthCare)/DataForCryoPaper/ralp-%s' % (cases[i])
       imageName = 'TumorRed'
       labelName = 'TumorRed-label'
       modelImageFileName = '%s/%s.nrrd' % (path, imageName)
@@ -1264,6 +1240,9 @@ class Cryo3Probes(ScriptedLoadableModuleLogic):
 
       print(path)
       inputVolume2 = modelLabelNode
+      print("==========")
+      print(inputVolume2)
+      print("==========")
 
       resultFileName = "Results-3Probes100-Case0%s" % (cases[i])
       resultFilePath = '/Users/pedro/Projects/MonteCarlo' + '/' + resultFileName
@@ -1290,7 +1269,6 @@ class Cryo3Probes(ScriptedLoadableModuleLogic):
     print(self.FinalProbePlacement1)
     print(self.FinalProbePlacement2)
     print(self.FinalProbePlacement3)
-    print(self.Spacing)
     self.affectedAreaModelNode = ModuleLogicMixin.createModelNode("AffectedArea")
 
     IceMatrix1 = self.GetIceMAtrixRAS(inputVolume2, self.FinalProbePlacement1)
